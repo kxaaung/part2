@@ -3,12 +3,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import PersonService from './services/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     PersonService
@@ -35,6 +37,12 @@ const App = () => {
             setPersons(persons.map(p => p.id !== returnedObject.id ? p : returnedObject))
             setNewName('')
             setNewNumber('')
+            setNotification({
+              message: `Updated number of ${returnedObject.name}`,
+              type: 'success'
+            })
+
+            setTimeout(() => { setNotification(null) }, 5000)
           })
       }
     } else {
@@ -49,6 +57,8 @@ const App = () => {
           setPersons(persons.concat(returnedObject))
           setNewName('')
           setNewNumber('')
+          setNotification({ message: `Added ${newObject.name}`, type: 'success' })
+          setTimeout(() => { setNotification(null) }, 5000)
         })
     }
   }
@@ -62,7 +72,11 @@ const App = () => {
           setPersons(persons.filter(p => p.id !== returnedObject.id))
         })
         .catch(error => {
-          alert(`the name ${personToDelete.name} is already delelted from server!`)
+          setNotification({
+            message: `Information of ${personToDelete.name} is already removed from server!`,
+            type: 'error',
+          })
+          setTimeout(() => { setNotification(null) }, 5000)
           setPersons(persons.filter(p => p.id !== id))
         })
     }
@@ -87,6 +101,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
       <h2>add a new</h2>
