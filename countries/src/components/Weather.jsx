@@ -4,9 +4,9 @@ const Weather = ({weather, capital}) => {
 	return (
 		<div>
 			<h2>Weather in {capital}</h2>
-			<p>temperature: {weather.main.temp - 273.15} Celcius</p>
+			<p>temperature: {(weather.main.temp - 273.15).toFixed(2)} Celcius</p>
 			<img src={iconUrl} height="200px" alt={weather.weather[0].description} />
-			<p>wind: {weather.wind.speed}</p>
+			<p>wind: {weather.wind.speed} m/s</p>
 		</div>
 	)
 }
